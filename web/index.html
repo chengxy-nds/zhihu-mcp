@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>知乎关注问题蓝海机会挖掘控制台 (Claude Code Opus 5.5 风格)</title>
+  <meta name="description" content="基于 Claude Code Opus 5.5 终端美学的知乎关注问题蓝海机会挖掘与选题筛选系统">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Claude Code Top Header (中文版) -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo" title="Claude Code · Opus 5.5 架构">✻</div>
+        <div class="brand-title-wrap">
+          <div class="brand-title-row">
+            <span class="brand-title">知乎关注问题 · 机会挖掘分析台</span>
+            <span class="model-badge">OPUS 5.5 引擎</span>
+          </div>
+          <div class="brand-subtitle">
+            <span class="status-dot"></span>
+            <span>模型架构: Claude Opus 5.5</span>
+            <span>•</span>
+            <span>目标用户: @xiaofucode</span>
+            <span>•</span>
+            <span>已收录: 389 个关注问题</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn" id="refresh-btn" title="从知乎 API 实时重新抓取最新关注问题">
+          <span class="btn-icon">↻</span> 重新抓取
+        </button>
+        <button class="btn" id="export-btn" title="将当前筛选的问题导出为 CSV 格式表格">
+          <span class="btn-icon">↓</span> 导出 CSV
+        </button>
+        <a href="https://www.zhihu.com/people/xiaofucode/following/questions" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="前往知乎用户关注问题页面">
+          <span>↗</span> 知乎主页
+        </a>
+      </div>
+    </header>
+
+    <!-- Telemetry Metric Cards (中文看板) -->
+    <section class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">收录问题总量</span>
+          <span class="stat-badge">条数</span>
+        </div>
+        <div class="stat-value" id="stat-total-questions">-</div>
+        <div class="stat-footer">已完成全量多轮分页抓取</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">读者关注总人次</span>
+          <span class="stat-badge">人次</span>
+        </div>
+        <div class="stat-value" id="stat-total-followers">-</div>
+        <div class="stat-footer">潜在流量曝光与阅读需求池</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">现有存量回答数</span>
+          <span class="stat-badge">回答</span>
+        </div>
+        <div class="stat-value" id="stat-total-answers">-</div>
+        <div class="stat-footer">当前存量内容竞争量</div>
+      </div>
+
+      <div class="stat-card accent-green">
+        <div class="stat-header">
+          <span class="stat-title">平均供需蓝海比</span>
+          <span class="stat-badge">平均值</span>
+        </div>
+        <div class="stat-value" id="stat-avg-ratio">-</div>
+        <div class="stat-footer">关注人数 / (回答数 + 1)</div>
+      </div>
+
+      <div class="stat-card accent-terracotta">
+        <div class="stat-header">
+          <span class="stat-title">SSS级核心蓝海</span>
+          <span class="stat-badge">权重比≥30</span>
+        </div>
+        <div class="stat-value" id="stat-high-potential">-</div>
+        <div class="stat-footer">高关注量、极低竞争爆款选题</div>
+      </div>
+    </section>
+
+    <!-- Terminal Command Prompt & Filters (中文交互) -->
+    <section class="filter-panel">
+      <!-- Prompt input line -->
+      <div class="search-row">
+        <div class="search-box">
+          <span class="prompt-prefix">查询指令&gt;</span>
+          <input
+            type="text"
+            id="search-input"
+            class="search-input"
+            placeholder="输入问题关键词搜索（如：Java、架构、Redis、分布式、Agent、大模型）..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="clear-search-btn" id="clear-search" title="清空搜索">[清空 Esc]</button>
+        </div>
+
+        <div class="filter-controls">
+          <div class="input-group">
+            <label for="min-followers">最低关注:</label>
+            <input
+              type="number"
+              id="min-followers"
+              class="input-control"
+              placeholder="0"
+              min="0"
+              step="50"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="max-answers">最高回答:</label>
+            <input
+              type="number"
+              id="max-answers"
+              class="input-control"
+              placeholder="不限"
+              min="0"
+              step="10"
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="sort-select">排序依据:</label>
+            <select id="sort-select" class="select-control">
+              <option value="ratio">🔥 权重比 (关注/回答比率 ↓)</option>
+              <option value="opportunityScore">⭐ 综合机会分 (对数加权 ↓)</option>
+              <option value="follower_count">👥 纯关注人数 (高到低 ↓)</option>
+              <option value="answer_count_asc">💬 回答人数 (少到多 ↑)</option>
+              <option value="answer_count_desc">💬 回答人数 (多到少 ↓)</option>
+              <option value="created">🕒 最新提出时间 (按时间 ↓)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Tag Chips -->
+      <div class="preset-chips-row">
+        <span class="preset-label">快捷分类:</span>
+        <button class="chip active" data-preset="all">全部问题</button>
+        <button class="chip" data-preset="blue-ocean">🔥 核心蓝海 (比值≥30)</button>
+        <button class="chip" data-preset="low-comp">⚡ 极低竞争 (回答≤20)</button>
+        <button class="chip" data-preset="mega-hot">🚀 万人关注 (关注≥10k)</button>
+        <button class="chip" data-preset="tag-java">☕ Java 专区</button>
+        <button class="chip" data-preset="tag-arch">🏛️ 架构与系统设计</button>
+        <button class="chip" data-preset="tag-dist">⚡ 分布式/消息队列</button>
+        <button class="chip" data-preset="tag-db">💾 数据库/Redis</button>
+        <button class="chip" data-preset="tag-ai">🤖 AI / Agent 专题</button>
+      </div>
+    </section>
+
+    <!-- View Mode & Query Count Bar -->
+    <div class="view-bar">
+      <div class="result-count" id="result-count">
+        检索结果：共 <strong>0</strong> 个问题
+      </div>
+      <div class="view-actions">
+        <div class="view-mode-toggle">
+          <button class="toggle-btn active" id="view-table-btn" title="切换到表格视图">[表格视图]</button>
+          <button class="toggle-btn" id="view-card-btn" title="切换到卡片视图">[卡片视图]</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="table-wrapper" id="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 65px; text-align: center;">排名</th>
+            <th style="width: 125px;" class="sortable" data-col="ratio">
+              权重比 (供求) <span class="sort-indicator">▼</span>
+            </th>
+            <th class="sortable" data-col="title">知乎问题标题</th>
+            <th style="width: 110px;" class="sortable" data-col="follower_count">
+              关注人数 <span class="sort-indicator"></span>
+            </th>
+            <th style="width: 100px;" class="sortable" data-col="answer_count">
+              回答人数 <span class="sort-indicator"></span>
+            </th>
+            <th style="width: 110px;" class="sortable" data-col="opportunityScore">
+              综合机会分 <span class="sort-indicator"></span>
+            </th>
+            <th style="width: 130px; text-align: center;">快捷操作</th>
+          </tr>
+        </thead>
+        <tbody id="questions-tbody">
+          <!-- 动态数据行 -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Cards Grid View -->
+    <div class="cards-grid" id="cards-container" style="display: none;">
+      <!-- 动态卡片 -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <div class="empty-icon">∅</div>
+      <div class="empty-text">未检索到匹配的问题，请尝试调整搜索词或放宽筛选条件</div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper" id="pagination-wrapper">
+      <div class="page-size-selector">
+        <span>每页显示:</span>
+        <select id="page-size-select" class="select-control">
+          <option value="15">15 条</option>
+          <option value="30" selected>30 条</option>
+          <option value="50">50 条</option>
+          <option value="100">100 条</option>
+          <option value="-1">全部展开</option>
+        </select>
+      </div>
+
+      <div class="page-controls" id="page-controls">
+        <!-- 动态分页按键 -->
+      </div>
+    </div>
+
+    <!-- Claude Code Footer -->
+    <footer class="app-footer">
+      <div class="footer-left">
+        <span>✻ Anthropic Claude Code · Opus 5.5 终端风格界面</span>
+        <span>•</span>
+        <span>MCP 模型上下文协议 v1.31</span>
+      </div>
+      <div class="footer-right">
+        <span>当前分析用户: @xiaofucode</span>
+        <span>•</span>
+        <a href="https://github.com/chengxy-nds/zhihu-mcp" target="_blank" rel="noopener noreferrer" class="footer-link">
+          代码仓库 ↗
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast 提示容器 -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- 预加载离线数据集 -->
+  <script src="./data.js"></script>
+  <!-- 前端交互逻辑 -->
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,975 @@
+/* Anthropic Claude Code · Opus 5.5 Terminal & Warm Dark Design System */
+:root {
+  --claude-bg: #141311;
+  --claude-bg-subtle: #191816;
+  --claude-surface: #1e1c19;
+  --claude-surface-hover: #262420;
+  --claude-surface-active: #2e2a25;
+  --claude-well: #161513;
+
+  --claude-border: rgba(244, 239, 230, 0.09);
+  --claude-border-strong: rgba(244, 239, 230, 0.16);
+  --claude-border-terracotta: rgba(218, 119, 86, 0.35);
+
+  --claude-terracotta: #da7756;
+  --claude-terracotta-light: #e88d70;
+  --claude-terracotta-glow: rgba(218, 119, 86, 0.25);
+  --claude-terracotta-bg: rgba(218, 119, 86, 0.12);
+
+  --claude-amber: #e5a93c;
+  --claude-amber-bg: rgba(229, 169, 60, 0.12);
+
+  --claude-green: #4ade80;
+  --claude-green-bg: rgba(74, 222, 128, 0.12);
+
+  --claude-blue: #60a5fa;
+  --claude-purple: #c084fc;
+
+  --text-primary: #f4efe6;
+  --text-secondary: #a8a29e;
+  --text-muted: #78716c;
+  --text-faint: #57534e;
+
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--claude-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(218, 119, 86, 0.08) 0px, transparent 40%),
+    radial-gradient(at 100% 0%, rgba(229, 169, 60, 0.05) 0px, transparent 40%),
+    radial-gradient(at 50% 100%, rgba(218, 119, 86, 0.04) 0px, transparent 50%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--claude-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #332f2b;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #47423c;
+}
+
+.container {
+  max-width: 1420px;
+  margin: 0 auto;
+  padding: 24px 28px 60px;
+}
+
+/* Claude Code Terminal Top Navigation */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--claude-border);
+  position: relative;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Claude Iconic Asterisk Logo */
+.brand-logo {
+  width: 44px;
+  height: 44px;
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border-strong);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--claude-terracotta);
+  font-size: 26px;
+  box-shadow: 0 0 20px var(--claude-terracotta-glow);
+  user-select: none;
+  transition: transform 0.2s ease, border-color 0.2s;
+}
+.brand-logo:hover {
+  transform: rotate(45deg);
+  border-color: var(--claude-terracotta);
+}
+
+.brand-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-title {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.model-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--claude-terracotta-bg);
+  color: var(--claude-terracotta);
+  border: 1px solid var(--claude-border-terracotta);
+}
+
+.brand-subtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--claude-green);
+  box-shadow: 0 0 8px var(--claude-green);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.9); }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Claude Code Buttons */
+.btn {
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--claude-border);
+  background: var(--claude-surface);
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+  text-decoration: none;
+  user-select: none;
+}
+
+.btn:hover {
+  background: var(--claude-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--claude-border-strong);
+}
+
+.btn-primary {
+  background: var(--claude-terracotta);
+  color: #141311;
+  border-color: var(--claude-terracotta-light);
+  font-weight: 700;
+}
+.btn-primary:hover {
+  background: var(--claude-terracotta-light);
+  color: #141311;
+  box-shadow: 0 0 16px var(--claude-terracotta-glow);
+}
+
+.btn-icon {
+  font-size: 13px;
+}
+
+/* Telemetry / Metrics Banner */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  position: relative;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card:hover {
+  border-color: var(--claude-border-strong);
+  background: var(--claude-surface-hover);
+  transform: translateY(-1px);
+}
+
+.stat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.stat-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.stat-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.stat-card.accent-terracotta .stat-value {
+  color: var(--claude-terracotta);
+}
+.stat-card.accent-amber .stat-value {
+  color: var(--claude-amber);
+}
+.stat-card.accent-green .stat-value {
+  color: var(--claude-green);
+}
+
+.stat-footer {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+
+/* Claude Code Terminal Command / Filter Panel */
+.filter-panel {
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Terminal Command Prompt Search Bar */
+.search-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 320px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.prompt-prefix {
+  position: absolute;
+  left: 14px;
+  font-family: var(--font-mono);
+  color: var(--claude-terracotta);
+  font-weight: 700;
+  font-size: 13px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 11px 16px 11px 96px;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--claude-terracotta);
+  box-shadow: 0 0 0 2px var(--claude-terracotta-glow);
+  background: #141311;
+}
+
+.search-input::placeholder {
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  display: none;
+}
+.clear-search-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Terminal Filter Inputs */
+.filter-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+
+.input-group label {
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.select-control, .input-control {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.select-control option {
+  background: #1e1c19;
+  color: var(--text-primary);
+}
+
+.input-control[type="number"] {
+  width: 75px;
+}
+
+/* Preset Chips - Terminal Tag Style */
+.preset-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px dashed var(--claude-border);
+}
+
+.preset-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-right: 4px;
+  user-select: none;
+}
+
+.chip {
+  font-family: var(--font-mono);
+  padding: 4px 10px;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  background: var(--claude-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--claude-border-strong);
+}
+
+.chip.active {
+  background: var(--claude-terracotta-bg);
+  border-color: var(--claude-terracotta);
+  color: var(--claude-terracotta-light);
+  font-weight: 700;
+}
+
+/* View Bar */
+.view-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 0 2px;
+  font-family: var(--font-mono);
+}
+
+.result-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.result-count strong {
+  color: var(--claude-terracotta-light);
+}
+
+.view-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-mode-toggle {
+  display: inline-flex;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.toggle-btn {
+  font-family: var(--font-mono);
+  padding: 5px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+
+.toggle-btn.active {
+  background: var(--claude-surface-active);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* Data Table View - Claude Code Terminal Style */
+.table-wrapper {
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  margin-bottom: 20px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th {
+  background: var(--claude-bg-subtle);
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--claude-border);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.data-table th.sortable {
+  cursor: pointer;
+}
+.data-table th.sortable:hover {
+  color: var(--claude-terracotta);
+}
+.data-table th .sort-indicator {
+  margin-left: 4px;
+  font-size: 10px;
+  color: var(--claude-terracotta);
+}
+
+.data-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(244, 239, 230, 0.05);
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.data-table tbody tr {
+  transition: background-color 0.1s ease;
+}
+
+.data-table tbody tr:hover {
+  background: var(--claude-surface-hover);
+}
+
+/* Table elements */
+.rank-badge {
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 11px;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  color: var(--text-secondary);
+}
+
+.rank-badge.top-1 {
+  background: var(--claude-terracotta);
+  border-color: var(--claude-terracotta-light);
+  color: #141311;
+  box-shadow: 0 0 10px var(--claude-terracotta-glow);
+}
+.rank-badge.top-2 {
+  background: var(--claude-amber);
+  border-color: #fcd34d;
+  color: #141311;
+}
+.rank-badge.top-3 {
+  background: #78716c;
+  border-color: #a8a29e;
+  color: #141311;
+}
+
+.ratio-chip {
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  background: var(--claude-green-bg);
+  color: var(--claude-green);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.tier-tag {
+  font-family: var(--font-mono);
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-right: 6px;
+  text-transform: uppercase;
+}
+.tier-sss {
+  background: var(--claude-terracotta-bg);
+  color: var(--claude-terracotta-light);
+  border: 1px solid var(--claude-border-terracotta);
+}
+.tier-ss {
+  background: var(--claude-amber-bg);
+  color: var(--claude-amber);
+  border: 1px solid rgba(229, 169, 60, 0.3);
+}
+.tier-s {
+  background: var(--claude-green-bg);
+  color: var(--claude-green);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.tier-a {
+  background: rgba(96, 165, 250, 0.12);
+  color: var(--claude-blue);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+}
+
+.question-title-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: color 0.15s;
+}
+
+.question-title-link:hover {
+  color: var(--claude-terracotta-light);
+  text-decoration: underline;
+}
+
+.title-cell {
+  max-width: 520px;
+}
+
+.highlight {
+  background: rgba(218, 119, 86, 0.3);
+  color: #fff;
+  padding: 0 3px;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.metric-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13px;
+}
+.followers-metric {
+  color: var(--claude-blue);
+}
+.answers-metric {
+  color: var(--text-secondary);
+}
+.answers-metric.low {
+  color: var(--claude-green);
+  font-weight: 700;
+}
+
+.table-action-btn {
+  font-family: var(--font-mono);
+  padding: 4px 8px;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.table-action-btn:hover {
+  background: var(--claude-surface-hover);
+  color: var(--claude-terracotta);
+  border-color: var(--claude-border-terracotta);
+}
+
+/* Card Grid View - Claude Code Opus Card */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.question-card {
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.question-card:hover {
+  border-color: var(--claude-border-terracotta);
+  background: var(--claude-surface-hover);
+  transform: translateY(-2px);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  flex-grow: 1;
+}
+
+.card-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  background: var(--claude-well);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  margin-bottom: 14px;
+  border: 1px solid var(--claude-border);
+}
+
+.metric-item {
+  text-align: center;
+}
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px dashed var(--claude-border);
+}
+
+/* Pagination Bar */
+.pagination-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  background: var(--claude-surface);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.page-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.page-btn {
+  font-family: var(--font-mono);
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--claude-well);
+  border: 1px solid var(--claude-border);
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--claude-surface-hover);
+  color: var(--text-primary);
+  border-color: var(--claude-border-strong);
+}
+
+.page-btn.active {
+  background: var(--claude-terracotta);
+  border-color: var(--claude-terracotta-light);
+  color: #141311;
+  font-weight: 700;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+}
+
+.toast {
+  font-family: var(--font-mono);
+  padding: 10px 16px;
+  background: #1e1c19;
+  border: 1px solid var(--claude-border-terracotta);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: slideIn 0.2s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 50px 20px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+.empty-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: var(--claude-terracotta);
+}
+.empty-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Footer / Model Stamp */
+.app-footer {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--claude-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footer-link {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+.footer-link:hover {
+  color: var(--claude-terracotta-light);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 14px;
+  }
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .search-row {
+    flex-direction: column;
+  }
+  .search-box {
+    width: 100%;
+    min-width: 100%;
+  }
+  .filter-controls {
+    width: 100%;
+  }
+}
